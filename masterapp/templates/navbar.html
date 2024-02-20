@@ -1,0 +1,37 @@
+{%block body_block%}
+<head>  
+    <meta charset="UTF-8">  
+    <title>Index</title>  
+    {% load static %} 
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />  
+    
+  </head> 
+  
+  <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="white" >
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" style="color:white">Track And Trace</a>
+      <a class="navbar-brand" href="#" style="color:white">{{sd}}</a>
+    
+      
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link" href="#">Features</a>
+          <a class="nav-link" href="#">Pricing</a>
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+      </div>
+    </div>
+    </div>
+  </nav>
+  <br/>
+  
+
+  
+
+  {% endblock %}

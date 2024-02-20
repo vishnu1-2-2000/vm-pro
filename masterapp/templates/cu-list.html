@@ -1,0 +1,159 @@
+
+{%block body_block%}
+
+<head>  
+    <meta charset="UTF-8">  
+    <title>Index</title>  
+    {% load static %} 
+     {% comment %} <link rel="stylesheet" href="{% static 'css/style.css' %}"/>  {% endcomment %}
+      <link rel="stylesheet" href="{% static 'css/listpage.css' %}">   
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />  
+    <script type="text/javascript"> 
+      window.history.forward(); 
+      function noBack() { 
+          window.history.forward();
+          style="pointer-events: none;";"cursor: default"
+
+      } 
+  </script>
+  </head> 
+  
+  <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="white" >
+   <div id="load" style="margin-left:-930px; color:red;">
+    
+      <div style="color:white; margin-left:40px;"><h2>K</h2></div>
+      <div style="color:white;margin-left:30px;"><h2>C</h2></div>
+      <div style="color:white; margin-left:20px;"><h2>A</h2></div>
+      <div style="color:white; margin-left:10px;"><h2>R</h2></div>
+      <div style="color:white; margin-left:0px;"><h2>T</h2></div>
+    </div>
+     <div id="load" style="margin-left:-820px; color:red;">
+      <div style="color:white; margin-left:20px;"><h2>D</h2></div>
+      <div style="color:white; margin-left:10px;"><h2>N</h2></div>
+      <div style="color:white; margin-left:0px;"><h2>A</h2></div>
+    </div> 
+    <div id="load" style="margin-left:-700px; color:red;">
+      <div style="color:white; margin-left:40px;"><h2>E</h2></div>
+      <div style="color:white; margin-left:30px;"><h2>C</h2></div>
+      <div style="color:white; margin-left:20px;"><h2>A</h2></div>
+      <div style="color:white; margin-left:10px;"><h2>R</h2></div>
+      <div style="color:white; margin-left:0px;"><h2>T</h2></div>
+   
+    </div> 
+     
+      {% comment %} <a class="navbar-brand" href="#" style="color:white">Track And Trace</a> {% endcomment %}
+     
+      <a class="btn btn-outline-danger" style="margin-left:1600px;margin-top:6px" href="{%url 'signout'%}">Logout</a>
+     
+      
+     
+    
+   
+    </div>
+    <form action="{%url 'search'  %}" method="get" class="d-flex" style= "margin-left:1230px;margin-top:-20px"; >       
+      <input class="form-control me-2" type="text" name="query" placeholder="Enter Gtin" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button></div> 
+ 
+   </form>
+   
+  </nav>
+  <br/>
+  {% if search == 1 %}
+          <a href="{%url 'indexpage' %}" class="btn btn-info" style= "color:black; margin-left:1400px" >Back To List Page</a>   
+        
+            
+          {% endif %} 
+          <br/>
+         
+          
+  <table class="table table-dark" style="height:600px; width:100%;">
+    <thead >
+      <tr >
+        <tr>
+         
+            <th style="color:red;">id</th>
+            <th style="color:red;">Gtin</th>
+            <th style="color:red;">Lot</th>
+            <th style="color:red;">Expire Date</th>
+            <th style="color:red;">Type</th>
+            <th style="color:red;">Status</th>
+            <th style="color:red;">Action</th>
+        </tr>
+      </tr>
+    </thead>
+    {% for job in page_obj %}
+    <tbody>
+      <tr>
+        <td>{{job.id}}</td>
+        <td>{{job.gtin}}</td>
+        <td>{{job.lot}}</td>
+        <td>{{job.expiration_date}}</td>
+        <td>{{job.type}}</td>
+        <td>{{job.status}}</td>
+        <td>
+          {% if job.status == "Printed" %}
+          
+              <a href="{%url 'autovision' job.id%}" class="btn btn-danger" data-role="disabled" style="pointer-events: none; width:38%";"cursor: default"  ;>Closed</a> 
+         {% comment %} {% elif job.preparebuttonresponse == 1  %}
+              <a href="{%url 'emp-editjob' job.id%}" class="btn btn-success">View</a>  {% endcomment %}
+           {% else %}   
+            <a href="{%url 'autovision' job.id%}" class="btn btn-success">Check/Run Autovision</a> 
+
+         
+          {% endif %}  
+
+          
+          
+
+          {% comment %} {% if job.status == "Not Print" %}
+            <a href="{%url 'autovision' job.id%}" class="btn btn-success">Check/Run Autovision</a>
+         
+          {% else %}  
+              <a href="{%url 'autovision'  job.id%}" class="btn btn-success" data-role="disabled" style="pointer-events: none;";"cursor: default" ;>Check/Run Autovision</a>    
+          {% endif %}   {% endcomment %}
+          {% comment %} {% else %}  
+            <a href="{%url 'autovision'  job.id%}" class="btn btn-success" data-role="disabled" style="pointer-events: none;";"cursor: default" ;>Check/Run Autovision</a>  {% endcomment %}
+   
+            
+       
+        
+        </td>
+        {% comment %} <td>
+          <a href="{%url 'indexpage' %}" class="btn btn-info" style= "color:black; margin-left:1400px" >Back To List Page</a>   
+        </td> {% endcomment %}
+
+      </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+  <center>
+    {% comment %} {% if page_obj.has_previous %} {# whether the previous page exists #}
+    <a href="{%url 'indexpage' %}?page={{page_obj.previous_page_number}}">PreviousPage</a> {# link to the prev page #}
+    {% endif %}
+    <span>{{page_obj.number}}</span> {# the current page number #}
+    
+    {% if page_obj.has_next %} {# whether the next page exists #}
+    <a href="{%url 'indexpage' %}?page={{page_obj.next_page_number}}">NextPage</a> {# link to the next page #}
+    {% endif %} {% endcomment %}
+
+
+
+    <nav aria-label="Page navigation example" style="margin-left:800px;">
+      <ul class="pagination" >
+        {% if page_obj.has_previous %} 
+        <li class="page-item"><a class="page-link" style="color:red;" href="{%url 'indexpage' %}?page={{page_obj.previous_page_number}}">Previous Page</a></li> 
+         {% endif %}
+        <li class="page-item"><a class="page-link" style="color:red;" href="#">{{page_obj.number}}</a></li>
+        {% if page_obj.has_next %} 
+       <li class="page-item"><a class="page-link" style="color:red;" href="{%url 'indexpage' %}?page={{page_obj.next_page_number}}">Next Page</a></li>
+       {% endif %}
+      </ul>
+    </nav>
+</center>
+
+  {% endblock %}

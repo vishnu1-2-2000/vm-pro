@@ -1,0 +1,11 @@
+
+{%block body_block%}
+<div class="row">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <h1> HOME   welcome {{request.ud}}</h1>
+    <a class="dropdown-item" href="{%url 'signout'%}">logout</a>
+  </div>
+  <div class="col-4"></div>
+</div>
+{%endblock%}

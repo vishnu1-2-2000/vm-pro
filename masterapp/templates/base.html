@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>Product Management</title>
+</head>
+<body class="m-10">
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{%url 'all-jobs'  %}">Home</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <form action="{%url 'search'  %}" method="get" class="d-flex">
+                
+                  
+               
+            <input class="form-control me-2" type="text" name="query" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button></div>
+        
+        
+      </form>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{%url  'all-jobs' %}">Home</a>
+              </li>
+
+
+             
+              
+                  
+            
+
+              
+
+            </ul>
+
+
+
+     
+         
+        
+
+          </div>
+        </div>
+      </nav>
+
+
+
+    <h2 class="text-center mt-3"> Product Management </h2>
+
+    {% block content %}
+
+    {% endblock %}
+
+
+</body>
+</html>
