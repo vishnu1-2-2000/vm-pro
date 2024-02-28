@@ -210,7 +210,7 @@ class PrinterdataTable(models.Model):
         responsefield=models.BooleanField(null=True)
         preparebuttonresponse=models.BooleanField(null=True)
         stopbtnresponse=models.BooleanField(null=True)
-        start_pause_btnresponse=models.BooleanField(null=True)
+        start_pause_btnresponse=models.BooleanField(default=False)
         pause_stop_btnresponse=models.BooleanField(null=True)
         return_slno_btn_response=models.BooleanField(null=True)
         batchstopmessage=models.BooleanField(default=False)

@@ -15,7 +15,7 @@
 
 #load div {
   position:absolute;
-  width:50px;
+  width:30px;
   /* height:90px; */
   opacity:0;
   font-family:Helvetica, Arial, sans-serif;
@@ -104,6 +104,12 @@
   -webkit-animation-delay:2.2s;
 }
 #load div:nth-child(13) {
+  animation-delay:2.4s;
+  -o-animation-delay:2.4s;
+  -moz-animation-delay:2.4s;
+  -webkit-animation-delay:2.4s;
+} 
+#load div:nth-child(14) {
   animation-delay:2.4s;
   -o-animation-delay:2.4s;
   -moz-animation-delay:2.4s;

@@ -79,6 +79,8 @@ class listprinter(ListView):
 def listing(request) :
         hostname = socket.gethostname()
         systemip = socket.gethostbyname(hostname)
+        # systemip="192.168.200.131"
+        print(systemip)
         uname = Loginmodel.objects.get(id=2)
         loginname=uname.loginuname
         if(loginname!=""):
@@ -125,15 +127,23 @@ class PauseClassview(View):
         if(loginname!="" ): 
             if(qs.responsefield==1): 
                 qs=PrinterdataTable.objects.get(id=id)
-                
-                serial=qs.numbers
-                serialno=json.loads(serial)
+                try:
+                    serial=qs.numbers
+                    serialno=json.loads(serial)
+                except:
+                    print("serialnumbers finished")    
                 form=PrinterForm(request.POST,instance=qs)
                 obj = PrinterdataTable.objects.get(id=id)
                 detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(label_response=0,start_pause_btnresponse=0)
+                
                 print(obj.start_pause_btnresponse)
-                serilength=len(serialno)
-                print(serilength)
+                try:
+                    serilength=len(serialno)
+                    print(serilength)
+                except:
+                    print("no length")
+                    serilength=0
+                
                 return render(request,"pause-start.html",{"qs":qs,'lp':1,"sc":serilength,})
             else:
                 return redirect("indexpage")
@@ -467,7 +477,8 @@ class PauseClassview(View):
             print(serilength)
         except:
             print("pause printing because serialnumber are empty")
-            serilength=0    
+            serilength=0 
+            serialno=[]   
         s = socket.socket()
         port=34567
         s.connect(('192.168.200.150', port))
@@ -476,7 +487,9 @@ class PauseClassview(View):
         # "I6\x04"
         s.send(message51.encode()) 
         data51=s.recv(1024).decode() 
-        dataex=int(data51[:-1])          
+        dataex=int(data51[:-1])  
+        print("ink")   
+        print(dataex)     
         message53= "K8\x04"
         s.send(message53.encode()) 
         data53=s.recv(1024).decode() 
@@ -489,14 +502,24 @@ class PauseClassview(View):
             # y1.start()
             # print("hi")
             x1.start()
-            return render(request, 'pause-start.html', {'qs': qs,'pd':1,"sc":serilength,"prer":dataex,"warningmess":data53ex}) 
+            # return redirect("{%url 'Process-start' qs.id %}")
+           
+            # return render(request, 'pause-start.html', {'qs': qs,'pd':1,"sc":serilength,"prer":dataex,"warningmess":data53ex})
+            
+            
+        
            
         elif(PauseClassview.pausestart==1):
             PauseClassview.pausestart=0                    
             PauseClassview.qu.put(PauseClassview.pausestart)
-            return render(request, 'start-pause.html', {'qs': qs,'pd':1,"sc":serilength,"prer":dataex,"warningmess":data53ex})
+            # return render(request, 'pause-start.html', {'qs': qs,'pd':0,"sc":serilength,"prer":dataex,"warningmess":data53ex})
             # print(PauseClassview.pausestart)
-        # return render(request, 'pause-start.html', {'qs': qs,'pd':1,"sc":serilength,"prer":dataex,"warningmess":data53ex})
+            # return redirect("process-paused")
+            
+            
+            
+            
+        return render(request, 'pause-start.html', {'qs': qs,'pd':1,"sc":serilength,"prer":dataex,"warningmess":data53ex})
          
     def get_queryset(self):
         return PrinterdataTable.objects.all()              
@@ -520,7 +543,7 @@ class Viewprinterview(View):
                     form=PrinterForm(request.POST,instance=qs)
                     return render(request,"cu-edit.html",{"qs":qs})
                 else:
-                    return HttpResponse("Please Pause The Printer And Click The Navigate To Batch Detail Button")                     
+                     return redirect("httpalert1")
             else:
                 return redirect("signin")
     def printerfun(self,num,serialno,q,event,gtin,lot,expire,hrfkey,hrfvalue,type,id):
@@ -624,7 +647,7 @@ class Viewprinterview(View):
                      print('Received from server: ' + data15)         
                      print('Received from server: ' + data16)
 
-    def scannerfun(self,num,id,gtin,serialno,sl,printednumbers,q,event,lot,expire,hrfkey,hrfvalue,ip_address,child_numbers):
+    def scannerfun(self,num,id,gtin,serialno,sl,printednumbers,q,event,lot,expire,hrfkey,hrfvalue,ip_address,child_numbers,type):
         self.id=id                    
         self.serialno=serialno
         self.sl=sl
@@ -635,7 +658,8 @@ class Viewprinterview(View):
         self.hrfkey=hrfkey
         self.hrfvalue=hrfvalue
         self.ip_address=ip_address
-        self.child_numbers=child_numbers                 
+        self.child_numbers=child_numbers 
+        self.type= type                
         counter=0
         d=0
         co=-1
@@ -662,11 +686,22 @@ class Viewprinterview(View):
                 if(Viewprinterview.q.empty()):
                     try:       
                         data=s3.recv(1024).decode()
-                        v=data[0]
-                        meanconfidence=data[2:7]
-                        confidence=data[1]
-                        textbatch=data[4:18]
-                        print(textbatch)                                    
+                        print(data)
+                        print(type)
+                        if(type=="type2"):
+                            v=data[0] 
+                            confidence=data[1] 
+                            textbatch=data[11:25]
+                            meanconfidence=data[2:7]
+                            print(textbatch) 
+                            print(meanconfidence)
+                        elif(type== "type1" or type== "type5"):
+                            v=data[0]
+                            confidence=data[1]
+                            textbatch=data[9:23]
+                            meanconfidence=data[2:7]
+                            print(textbatch)  
+                            print(meanconfidence)                                     
                         if d==1:
                             try:
                                 upjso.append(sl[counter])
@@ -684,35 +719,49 @@ class Viewprinterview(View):
                                             grade="D"
                                 else:
                                             grade="F" 
+                                # if(v=="4" ):
+                                #             grade="A"
+                                # elif(v=="3" ):
+                                #             grade="B"
+                                # elif (v=="2" ):
+                                #             grade="C"
+                                # elif (v=="1" ):
+                                #             grade="D"
+                                # else:
+                                #             grade="F" 
                                             
                                 r={"serialnumber":sl[counter],
                                             "grade":grade}
+                                
                                 if(gtin==textbatch):
-                                    print(r)
-                                    b=json.dumps(r)
-                                    gradeupdation=ScannerTable(
-                                    gtin=gtin,
-                                    ip_address=ip_address,
-                                    grade=b,
-                                    status="NO"
-                                    )
-                                    gradeupdation.save()
-                                    obj = PrinterdataTable.objects.get(id=id)
-                                    detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(scannergradefield=b)
-                                    jso=json.dumps(upjso)
-                                    serialno.remove(sl[counter])
-                                    gh=json.dumps(serialno)
-                                    print(sl[counter])
-                                    obj = PrinterdataTable.objects.get(id=id)
-                                    detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(printed_numbers=jso,numbers=gh)
-                                    updatedjson=json.loads(jso)
-                                    if(counter==sllen-1):
-                                        print(serialno)                    
-                                        del serialno[:]
+                                    if(v=="3" or v=="2"):                
+                                        print(r)
+                                        b=json.dumps(r)
+                                        gradeupdation=ScannerTable(
+                                        gtin=gtin,
+                                        ip_address=ip_address,
+                                        grade=b,
+                                        status="NO"
+                                        )
+                                        gradeupdation.save()
                                         obj = PrinterdataTable.objects.get(id=id)
-                                        detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(numbers=serialno)                  
-                                        print("detecte serialnumber cleared")     
-                                    counter=counter+1
+                                        detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(scannergradefield=b)
+                                        jso=json.dumps(upjso)
+                                        serialno.remove(sl[counter])
+                                        gh=json.dumps(serialno)
+                                        print(sl[counter])
+                                        obj = PrinterdataTable.objects.get(id=id)
+                                        detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(printed_numbers=jso,numbers=gh)
+                                        updatedjson=json.loads(jso)
+                                        if(counter==sllen-1):           #If the last number is detecting it will clear the serialno
+                                            print(serialno)                    
+                                            del serialno[:]
+                                            obj = PrinterdataTable.objects.get(id=id)
+                                            detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(numbers=serialno)                  
+                                            print("detecte serialnumber cleared")     
+                                        counter=counter+1
+                                    else:    
+                                        print("grade less then B")
                                 else:                   
                                     print("not equal")
                                     r={"serialnumber":sl[counter],
@@ -737,7 +786,7 @@ class Viewprinterview(View):
                                     gh=json.dumps(serialno)
                                     obj = PrinterdataTable.objects.get(id=id)
                                     detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(numbers=gh,child_numbers=drgjson)
-                                    if(counter==sllen-1):
+                                    if(counter==sllen-1):     #if the last number is not detecting it will clear the serialno
                                         print(serialno)                    
                                         del serialno[:]
                                         obj = PrinterdataTable.objects.get(id=id)
@@ -766,8 +815,24 @@ class Viewprinterview(View):
                                 message30= "F0\x04"
                                 s4.send(message30.encode()) 
                                 data30=s4.recv(1024).decode()
-                                obj = PrinterdataTable.objects.get(id=id)
-                                detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(stopbtnresponse=1,return_slno_btn_response=0,status="Stopped")
+                                if(serialno==[]):
+                                    try:
+                                        detailsObj = PrinterdataTable.objects.get(id=id)
+                                        prodObj=PrinterdataTable.objects.get(gtin=detailsObj.gtin)
+                                        no=prodObj.child_numbers
+                                        # childnojson=json.loads(no)
+                                        obj = PrinterdataTable.objects.get(id=id)
+                                        detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(balanced_serialnumbers=no)
+                                        
+                                        
+                                    except:
+                                        print("nochild numbers available")                          
+                                    obj = PrinterdataTable.objects.get(id=id)
+                                    detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(stopbtnresponse=1,return_slno_btn_response=0,status="Printed")
+                                    
+                                else:
+                                    obj = PrinterdataTable.objects.get(id=id)
+                                    detailObj=PrinterdataTable.objects.filter(gtin=obj.gtin).update(stopbtnresponse=1,return_slno_btn_response=0,status="Stopped")
                                         
                                 detailsObj1 = PrinterdataTable.objects.get(id=id) 
                                 prodObj=ProductionOrder.objects.get(gtin_number=detailsObj1.gtin)
@@ -883,7 +948,7 @@ class Viewprinterview(View):
                     Viewprinterview.threadstart=1
                     Viewprinterview.q.put(Viewprinterview.threadstart) 
                     # print(Viewprinterview.threadstart)
-                    y = threading.Thread(target=self.scannerfun,args=(10,id,gtin,serialno,sl,printednumbers,Viewprinterview.q,Viewprinterview.event,lot,expire,hrfkey,hrfvalue,ip_address,child_numbers))
+                    y = threading.Thread(target=self.scannerfun,args=(10,id,gtin,serialno,sl,printednumbers,Viewprinterview.q,Viewprinterview.event,lot,expire,hrfkey,hrfvalue,ip_address,child_numbers,type))
                     x = threading.Thread(target=self.printerfun,args=(10,serialno,Viewprinterview.q,Viewprinterview.event,gtin,lot,expire,hrfkey,hrfvalue,type,id))
                     y.start()
                     x.start()                       
@@ -912,7 +977,12 @@ class Errorview(TemplateView):
         if(loginname!=""): 
             template_name = "printererror.html"        
 class Scannersoftwareview(TemplateView):     
-        template_name = "scannersoftware.html"     
+        template_name = "scannersoftware.html"
+class HttpAlert1(TemplateView):     
+        template_name = "Httpalert1.html" 
+        
+class ProcessStart(TemplateView):
+        template_name = "Httpalert1.html"              
 class Returnserialnumbers(View):
     def get(self,request,id):
         uname = Loginmodel.objects.get(id=2)
@@ -1006,7 +1076,7 @@ class Gradecount(ListView):
             return render(request,"gradecount.html",{"qs":qs,"sc":serilength})       
         else:
             return redirect("signin")                      
-    
+
 class Serialnumberdownloadagainview(View):
     def get(self,request,id):              
         qs=PrinterdataTable.objects.get(id=id)

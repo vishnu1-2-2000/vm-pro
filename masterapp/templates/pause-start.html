@@ -1,132 +1,164 @@
 <!DOCTYPE html>
-<html lang="en">  
+  <html lang="en">  
     <head>  
-        <meta charset="UTF-8">  
+      <meta charset="UTF-8">  
         <title>Index</title>  
         {% load static %} 
         <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
-        crossorigin="anonymous"
-        />
-       
-        {% comment %} <script type="text/javascript"> 
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+          crossorigin="anonymous"
+        /> 
+       <script type="text/javascript"> 
           window.history.forward(); 
           function noBack() { 
-              window.history.forward(); 
+              window.history.forward();
           } 
-          
-      </script>  {% endcomment %}
-      
-    </head> 
-    <br/> 
-    <body style="background-color:#848482"> 
-      
-        {% comment %} <div class="alert alert-primary"  role="alert" style="width:30%; margin-left:600px" >
-            Click To The Prepare button After Preparing Click To Start 
-           </div>  {% endcomment %}
-    <form method="POST" class="post-form" action="{{qs.id}}">  
-        {% csrf_token %}
-        <br/> <br/> <br/>
-        <div class="container text-center" style="border: 4px solid rgb(51, 74, 72); background-color:#d3d3d3">
-           
+        </script>  
+    </head>   
+    <body style="background-color:#bebebe" > 
+      <br></br>
+      <br></br>
+      <div class="container">
+        <form method="POST" class="post-form" action="{{qs.id}}"> 
+          {% csrf_token %}
             <div class="row">
-               
-                <div classname="col-12">
-                    <h1><font face="times new roman" >Printing Details</font></h1>
-                    <br></br>
+              <div class="col-12">
+                <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+                  <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                  </symbol>
+                </svg> 
+                <div class="alert alert-info d-flex align-items-center" role="alert" style="width:100%;">
+                  <svg class="bi flex-shrink-0 me-2" style="height:50px" role="img" aria-label="Danger:" style="height:30px; width:10%"><use xlink:href="#exclamation-triangle-fill"></svg>
+                    For Stopping the Batch You Should Click The Pause Button.After That Click The Navigate To Batch Details Button For Closing The Batch
                 </div>
-               
+              </div>
             </div>
-            <h4>SerialNumber Count : {{ sc }}</h4>
-           
-            {% if sc <= 1000 %}
-            <div class="alert alert-warning" role="alert">
-                Serialnumbers Becomes low Please Pause The Printer and Download More Numbers  
+          
+            <div class="container text-center" style="border: 4px solid rgb(51, 74, 72); background-color:#d3d3d3">
+              <div class="row">
+                <div classname="col-12">
+                  <h1 ><font face="times new roman" ><center>Printing Details</center></font></h1>
+                </div>
               </div>
-              {% elif sc <= 100 %}  
-              <div class="alert alert-danger" role="alert">
-                Serialnumbers Becomes low Please Pause The Printer and Download More Numbers
+              <div class="row">
+                <div class="col-8">
+                  {% if prer < 10 %}
+                    <div class="alert alert-warning" role="alert">
+                      Ink Level Of Printer Is Low
+                    </div> 
+                  {% endif %} 
+                  {% if warningmess == "cartridge_nearing_expiration (7)"  %}
+                    <div class="alert alert-primary"  role="alert" style="width:100%;" >
+                      Cartridge Of Printer Will Expire Soon 
+                    </div> 
+                  {% endif %} 
+                </div>
+                <div class="col-4">
+                  <h4>SerialNumber Count:{{ sc }}</h4>
+                </div>
               </div>
-              {% else %}
-              <div>
-                
-              </div>
-               
-        {% endif %} 
-        {% if prer < 10 %}
-        <div class="alert alert-warning" role="alert">
-          Ink Level Of Printer Is Low
-          </div> 
-          {% endif %} 
-          {% if warningmess == "cartridge_nearing_expiration (7)"  %}
-          <div class="alert alert-primary"  role="alert" style="width:50%; margin-left:450px" >
-          Cartridge oF Printer Will Expire Soon 
-          </div> 
-          {% endif %} 
-            <br/> <br/> <br/>
-            <div class="row" style="margin-left:-110px">
+              <br/>
+              <div class="row">
                 <br></br>
                 <div class="col-3">  
-                  <h5 style="margin-left:180px">Lot</h5>
-                  <br/> <br/><br/>
-                  <h5 style=" margin-left:190px" >Serialno</h5>  
-                  <br/> <br/><br/>
-                  <h5 style=" margin-left:200px" >Expiry Date</h5>  
+                  <h5>Lot</h5>
+                  <br></br>
+                  <h5 >SerialNumbers</h5>  
+                  <br></br>
+                  <h5>Expiry Date</h5> 
+                  <br></br>
                 </div>
                 <div class="col-3">
                   <input type="text" readOnly="true" style="width:80%;height:50px"   name="eid" id="id_eid" required maxlength="50" value="{{ qs.lot }}"/> 
-                  <br/><br/><br/>
+                  <br></br>
                   <input type="text" readOnly="true" style="width:80%;height:50px"  name="ename" id="id_ename" required maxlength="100" value="{{ qs.numbers }}" />
-                  <br/><br/><br/>
-                  <input type="text" readOnly="true" style="width:80%;height:50px" name="econtact" id="id_econtact" required maxlength="15" value="{{ qs.expiration_date}}" />   
+                  <br></br>
+                  <input type="text" readOnly="true"  style="width:80%;height:50px" name="econtact" id="id_econtact" required maxlength="15" value="{{ qs.expiration_date}}" /> 
+                  <br></br>
                 </div>
-                <br></br>
+            
                 <div class="col-3">
-                  <h5 style="margin-left:-60px">Gtin</h5> 
-                  <br/><br/><br/>
-                  <h5 style="margin-left:100px" >Processorder Number:</h5>   
-                  <br/><br/><br/>
-                  <h5 style="margin-left:-60px">Type</h5>   
+                  <h5 >Gtin</h5> 
+                  <br></br>
+                  <h5 >ProcessorderNumber</h5>   
+                  <br></br>
+                  <h5 >Type</h5>
+                  <br></br>
                 </div>
                 <div class="col-3">
-                  <input type="text" readOnly="true" style="width:80%;height:50px"  name="econtact" id="id_econtact" required maxlength="15" value="{{ qs.gtin}}" />  
-                  <br/><br/><br/>
+                  <input  type="text" readOnly="true" style="width:80%;height:50px"  name="econtact" id="id_econtact" required maxlength="15" value="{{ qs.gtin}}" />  
+                  <br></br>
                   <input type="text" readOnly="true" style="width:80%;height:50px"   name="eemail" id="id_eemail" required maxlength="254" value="{{ qs.processordernumber }}" /> 
-                  <br/><br/><br/>
-                  <input type="text" readOnly="true" style="width:80%;height:50px"   name="econtact" id="id_econtact" required maxlength="15" value="{{ qs.type }}" /> 
-                
+                  <br></br>
+                  <input type="text" readOnly="true" style="width:80%;height:50px"   name="econtact" id="id_econtact" required maxlength="15" value="{{ qs.type }}" />   
+                  <br></br> 
+                  <input type="text" readOnly="true" style="width:80%;height:50px"   name="econtact" id="id_econtact" required maxlength="15" value="{{ pd }}" />     
                 </div>
-              </div> 
-              <br></br>
-            <div class="row">
-                <div classname="col-12">
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  {% if qs.start_pause_btnresponse == 1 or pd == 1 %}
+                  <a href="{%url 'emp-editjob' qs.id%}" class="btn btn-info" style= "color:red;" >Navigate To Batch Details</a>
+                  {% endif %} 
+                </div>
+                <div class="col-4">
                    
-               
-                    {% comment %} {% if qs.label_response == "0"  and  qs.start_pause_btnresponse == "False" %}
-                        <button type="submit" class="btn btn-success">Start</button> {% endcomment %}
-                        {% if qs.start_pause_btnresponse == False and pd == 1 %}
-                        <button type="submit" class="btn btn-warning">Pause</button>
-                        
-                        {% else  %}
-                        <button type="submit" class="btn btn-success">Start</button>   
-                        {% endif %}  
-                     
-                    <br></br>
-                </div>
+                  {% if pd == 1 or qs.start_pause_btnresponse == 1  %}
+                  <button type="submit" class="btn btn-warning">Pause</button> &nbsp;
+                  
+                 {% else %}
                 
-            </div> 
-            {% if qs.start_pause_btnresponse == True and pd == 1 %}
-            <a href="{%url 'emp-editjob' qs.id%}" class="btn btn-info" style= "color:red; margin-left:1040px" >Navigate To Batch Details Page</a>
-            {% endif %} 
-           
-             <a href="{%url 'gradecount' qs.id  %}" class="btn btn-primary" style= "color:black; margin-left:640px" >Grades</a> 
-             {% comment %} <a href="{%url 'emp-editjob' qs.id%}" class="btn btn-info" style= "color:red; margin-left:1040px" >Navigate To Batch Details Page</a>    {% endcomment %}
-        </form>  
+                 <button type="submit" class="btn btn-success" id="refresh_button">Start</button>
+                 {% endif %}    
+                  {% comment %} {% if qs.start_pause_btnresponse == 0 and pd == 1 %}
+                       <button type="submit" class="btn btn-warning">Pause</button> 
+                         <button type="submit" class="btn btn-success" id="refresh_button">Start</button> 
+                     
+                      
+                   {% else  %}
+                       <button type="submit" class="btn btn-success" id="refresh_button">Start</button>
+                      
+                  {% endif %}   {% endcomment %}
+                </div>
+                {% comment %} <div class="col-4">
+                  <a href="{%url 'gradecount' qs.id  %}" class="btn btn-primary" style= "color:black;" >Grades</a> 
+                </div>  
+              </div> {% endcomment %}
 
-        
+              
+              <div class="row">
+                {% comment %} <div class="col-12" id="reloaddiv">
+                  <input type="text" style="width:90%;height:50px"   name="eid" id="task" required maxlength="50" value="{{ qs.scannergradefield }}"/> 
+                </br>
+                </div> {% endcomment %}
+              </div>
+          </div> 
+        </form>
+      </div>  
+      <script type="text/javascript"> 
+        $(document).on('submit','#task-form',function(e){ 
+            e.preventDefault(); 
+            $.ajax({ 
+                type:'POST', 
+                url:"{%url 'emp-editjob' qs.id%}", 
+                data: 
+                { 
+                    task:$("#task").val(), 
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val() 
+                }, 
+                success:function(){ 
+                      alert('Saved'); 
+                        } 
+                }) 
+            }); 
+        </script> 
     </body>  
+
+  
 </html>  
+
+  

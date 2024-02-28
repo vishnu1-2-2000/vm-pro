@@ -24,6 +24,7 @@ urlpatterns = [
         path('indexpage/', views.listing, name='indexpage'),
         path("home",views.Candidatehomeview.as_view(),name="cand-home"),
         path("scannerhome",views.Scannermessageview.as_view(),name="scanner-message"),
+        path("httpalert1",views.HttpAlert1.as_view(),name="httpalert1"),
         path("batchstopmess/",views.Batchstopmessageview.as_view(),name="batch-stop-message"),
         path("printererrors/",views.Errorview.as_view(),name="printer-errors"), 
         path("scannersoftware/",views.Scannersoftwareview.as_view(),name="scanner-software"), 
